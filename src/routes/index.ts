@@ -1,5 +1,5 @@
 import express, {Request, Response, NextFunction, Router, query} from 'express';
-import {DB_Connection} from '../db_connect'
+import {DB_Connection} from '../db_connection'
 
 const router = Router();
 const db_connection = new DB_Connection();

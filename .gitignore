@@ -1,7 +1,6 @@
 # My Setting
 dist
 src/public/images
-src/db_connect.ts
 
 # Security
 package-lock.json
