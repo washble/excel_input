@@ -3,12 +3,12 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www",
+    "start": "node ./dist/bin/www",
     "start_pm2": "pm2 start ./dist/bin/www.js --watch --no-daemon",
     "stop": "pm2 kill",
     "dev": "ts-node ./src/bin/www.ts",
     "copy-files": "xcopy .\\src\\public .\\dist\\public\\ /E /Y && xcopy src\\views dist\\views\\ /E /Y",
-    "build": "./node_modules/.bin/tsc && npm run copy-files"
+    "build": ".\\node_modules\\.bin\\tsc && npm run copy-files"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
