@@ -38,7 +38,7 @@ router.post('/insert_categorys', async function(req: Request, res: Response, nex
       res.status(400).json({error: 'Input Error'});
     }
     
-    query = "INSERT INTO category VALUES(?, ?)";
+    query = "INSERT INTO category VALUES(?, JSON_ARRAY(?))";
     for(let i = 0; i < array_to_json.length; i++)
       result = await db_connection.connection_query(query, [array_to_json[i], isuSrtCd]);
     if(result == undefined) {
