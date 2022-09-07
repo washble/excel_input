@@ -16,18 +16,18 @@ export class DB_Connection {
         })
 
         this.connection.getConnection()
-            .then((result: any) => console.log('======DB_Connection: Success======'))
-            .catch((result: any) => console.log('======DB_Connection: Failure======'))
+            .then(res => console.log('======DB_Connection: Success======'))
+            .catch(err => console.log('======DB_Connection: Failure======'))
     }
 
-    public async connection_query(sql: string) {
+    public async connection_query(sql: string, values: any = 0) {
         const conn = this.connection.getConnection();
         try {
-            const [row] = await (await conn).query(sql);
+            const [row] = await (await conn).query(sql, values);
             console.log(row);
             return row;
         } catch (e: any) {
-            throw new Error(e);
+            console.log(e);
         } finally {
             (await conn).release();
         }

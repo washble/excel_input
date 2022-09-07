@@ -6,3 +6,15 @@ body {
 a {
   color: #00B7FF;
 }
+
+textarea {
+  resize: none !important;
+}
+
+.checker_ok {
+  color: green;
+}
+
+.checker_error {
+  color: red;
+}
