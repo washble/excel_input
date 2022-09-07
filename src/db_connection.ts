@@ -7,12 +7,6 @@ export class DB_Connection {
     private readonly connection: mysql.Pool;
 
     constructor() {
-        console.log(process.env.key);
-        console.log(process.env.host);
-        console.log(process.env.user);
-        console.log(process.env.password);
-        console.log(process.env.database);
-
         this.connection = mysql.createPool({
             host: process.env.host,
             user: process.env.user,
