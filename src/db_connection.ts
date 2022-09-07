@@ -1,7 +1,45 @@
-//import * as mysql from 'mysql2';
 import * as mysql from 'mysql2/promise';
+import dotenv from 'dotenv';
+
+dotenv.config({ path: './.env'});
 
 export class DB_Connection {
+    private readonly connection: mysql.Pool;
+
+    constructor() {
+        console.log(process.env.key);
+        console.log(process.env.host);
+        console.log(process.env.user);
+        console.log(process.env.password);
+        console.log(process.env.database);
+
+        this.connection = mysql.createPool({
+            host: process.env.host,
+            user: process.env.user,
+            password: process.env.password,
+            connectionLimit: 4,
+            database: process.env.database
+        })
+
+        this.connection.getConnection()
+            .then((result: any) => console.log('======DB_Connection: Success======'))
+            .catch((result: any) => console.log('======DB_Connection: Failure======'))
+    }
+
+    public async connection_query(sql: string) {
+        const conn = this.connection.getConnection();
+        try {
+            const [row] = await (await conn).query(sql);
+            console.log(row);
+            return row;
+        } catch (e: any) {
+            throw new Error(e);
+        } finally {
+            (await conn).release();
+        }
+    }
+
+    // import * as mysql from 'mysql2';
     // private connection_db() {
     //     let connection = mysql.createConnection({
     //         host: 'my_host',
@@ -25,33 +63,4 @@ export class DB_Connection {
     //     })
     //     connection.end();
     // }
-
-    private readonly connection: mysql.Pool;
-
-    constructor() {
-        this.connection = mysql.createPool({
-            host: 'my_host',
-            user: 'my_user',
-            password: 'my_password',
-            connectionLimit: 4,
-            database: 'my_database'
-        })
-
-        this.connection.getConnection()
-            .then((result: any) => console.log('======DB_Connection: Success======'))
-            .catch((result: any) => console.log('======DB_Connection: Failure======'))
-    }
-
-    public async connection_query(sql: string) {
-        const conn = this.connection.getConnection();
-        try {
-            const [row] = await (await conn).query(sql);
-            console.log(row);
-            return row;
-        } catch (e: any) {
-            throw new Error(e);
-        } finally {
-            (await conn).release();
-        }
-    }
 }
