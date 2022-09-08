@@ -6,9 +6,6 @@ const db_connection = new DB_Connection();
 
 /* GET home page. */
 router.get('/', async function(req: Request, res: Response, next: NextFunction) {
-  let query = 'SELECT * FROM category';
-  let result = await db_connection.connection_query(query);
-
   res.render('index', { title: 'Express' });
 });
 
@@ -28,23 +25,55 @@ router.post('/insert_categorys', async function(req: Request, res: Response, nex
   let isuSrtCd = req.body.isuSrtCd;
   let categorys = req.body.categorys;
   let array_to_json = JSON.parse(req.body.array_to_json);
+  let delete_array = JSON.parse(req.body.delete_array);
+  let add_array = JSON.parse(req.body.add_array);
   
-  if(isuSrtCd == undefined || categorys == undefined) {
+  if(isuSrtCd == undefined || array_to_json == undefined) {
     res.status(400).json({error: 'Input Error'});
   } else {
-    let query = "INSERT INTO stocksector VALUES(?, JSON_ARRAY(?))";
-    let result = await db_connection.connection_query(query, [isuSrtCd, array_to_json]);
+    //let query = "INSERT INTO stocksector VALUES(?, JSON_ARRAY(?))";
+    let query = "INSERT INTO stocksector VALUES(?, JSON_ARRAY(?)) ON DUPLICATE KEY UPDATE category=JSON_ARRAY(?)";
+    let result = await db_connection.connection_query(query, [isuSrtCd, array_to_json, array_to_json]);
     if(result == undefined) {
       res.status(400).json({error: 'Input Error'});
     }
-    
-    query = "INSERT INTO category VALUES(?, JSON_ARRAY(?))";
-    for(let i = 0; i < array_to_json.length; i++)
-      result = await db_connection.connection_query(query, [array_to_json[i], isuSrtCd]);
+
+
+    let get_isuSrtCd_query = "SELECT isuSrtCd FROM category WHERE category = ?";
+    let temp_get_result: any;
+    let temp_json_array: string[] = [];
+    for(let i = 0; i < delete_array.length; i++) {
+      temp_get_result = await db_connection.connection_query(get_isuSrtCd_query, delete_array[i]);
+      if(temp_get_result.length > 0) {
+        for(let j = 0; j < temp_get_result.length; j++) {
+          if(temp_get_result[j] == isuSrtCd) {
+            temp_get_result.splice(j, 1);
+            break;
+          }
+        }
+        query = "UPDATE category SET isuSrtCd=JSON_ARRAY(?) WHERE category=?";
+        result = await db_connection.connection_query(query, [temp_get_result, delete_array[i]]);
+      }
+    }
+
+
+    for(let i = 0; i < add_array.length; i++) {
+      temp_get_result = await db_connection.connection_query(get_isuSrtCd_query, add_array[i]);
+      if(temp_get_result.length > 0) {
+        temp_json_array = temp_get_result[0].isuSrtCd;
+        temp_json_array.push(isuSrtCd);
+      }
+      else {
+        temp_json_array = [isuSrtCd];
+      }
+      query = "INSERT INTO category VALUES(?, JSON_ARRAY(?)) ON DUPLICATE KEY UPDATE isuSrtCd=JSON_ARRAY(?)";
+      result = await db_connection.connection_query(query, [add_array[i], temp_json_array, temp_json_array]);
+    }
+
+
     if(result == undefined) {
       res.status(400).json({error: 'Input Error'});
     }
-    
     res.status(200).json([{'result':'Success'}]);
   }
 })
