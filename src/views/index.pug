@@ -18,7 +18,9 @@ block content
         div(class="row")
           div(class="col-lg-10")
             div(class="form-group row")
-              label(for="" class="form-label mt-4") 카테고리 목록
+              div(class="mb-3")
+                label(for="" class="form-label mt-4") 카테고리 목록
+                button(type="button" class="btn btn-primary" onclick="insert_categorys()") 확인
               textarea(id="result_categorys_textarea" class="form-control" name="", cols="30", rows="10",
                        readonly="readonly", placeholder="종목코드를 검색해주세요")
             div(class="form-group row")
