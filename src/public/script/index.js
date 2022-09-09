@@ -22,16 +22,17 @@ function get_categorys() {
         else console.log(res.statusText);
     })
     .then(json => {
-        result_textarea.innerHTML = '';
-        result_textarea.innerHTML = jsonarray_to_comma(json[0].category, ',');
-        before_category = result_textarea.innerHTML;
-        checker_toggle(1, checker, no);
+        result_textarea.value = '';
+        result_textarea.value = jsonarray_to_comma(json[0].category, ',');
+        before_category = result_textarea.value;
+        if(before_category !== '') checker_toggle(1, checker, no);
+        else checker_toggle(0, checker, ok);
         set_readonly(result_textarea, true);
         category_btn.value = "수정"
         console.log(`Success: ${json[0].category}`);
     })
     .catch(err => {
-        result_textarea.innerHTML = '';
+        result_textarea.value = '';
         result_textarea.setAttribute('placeholder', way);
         before_category = '';
         checker_toggle(0, checker, ok);
@@ -88,10 +89,10 @@ function insert_categorys() {
         console.log('종목코드를 넣어주세요');
         return;
     }
-    if(result_textarea.value == undefined || result_textarea.value == '') {
-        console.log('카테고리를 추가해주세요');
-        return;
-    }
+    // if(result_textarea.value == undefined || result_textarea.value == '') {
+    //     console.log('카테고리를 추가해주세요');
+    //     return;
+    // }
 
     let before_category_array = split(before_category, ',');
     let current_category_array = split(result_textarea.value, ',');
@@ -120,6 +121,7 @@ function insert_categorys() {
         else console.log(res.statusText);
     })
     .then(json => {
+        get_categorys();
         console.log(`Result: ${json[0].result}`);
     })
     .catch(err => {
