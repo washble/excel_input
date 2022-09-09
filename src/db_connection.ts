@@ -33,6 +33,21 @@ export class DB_Connection {
         }
     }
 
+    public get_connection() {
+        return this.connection.getConnection();
+    }
+
+    public async transaction_conn_query(conn: Promise<mysql.PoolConnection>, sql: string, values: any = 0) {
+        try {
+            const [row] = await (await conn).query(sql, values);
+            console.log(row);
+            return row;
+        } catch (e: any) {
+            console.log(e);
+            throw new Error(e);
+        }
+    }
+
     // import * as mysql from 'mysql2';
     // private connection_db() {
     //     let connection = mysql.createConnection({
