@@ -31,7 +31,7 @@ function get_categorys() {
             result_textarea.value = jsonarray_to_comma(json[0].category, ',');
             before_category = result_textarea.value;
             if(before_category !== '') checker_toggle(1, checker, no);
-            else checker_toggle(1, checker, ok);
+            else checker_toggle(0, checker, ok);
             set_readonly(result_textarea, true);
             set_display_class(category_btn, false, 'd-none');
             category_btn.value = "수정"
