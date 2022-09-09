@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./dist/bin/www",
+    "start": "node ./dist/bin/www.js",
     "start_pm2": "pm2 start ./dist/bin/www.js --watch --no-daemon",
     "stop": "pm2 kill",
     "dev": "ts-node ./src/bin/www.ts",
