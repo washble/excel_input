@@ -23,13 +23,17 @@ router.post('/get_categorys', async function(req: Request, res: Response, next: 
 
 router.post('/insert_categorys', async function(req: Request, res: Response, next: NextFunction) {
   let isuSrtCd = req.body.isuSrtCd;
-  let array_to_json = JSON.parse(req.body.array_to_json);
-  let delete_array = JSON.parse(req.body.delete_array);
-  let add_array = JSON.parse(req.body.add_array);
+  let array_to_json = req.body.array_to_json;
+  let delete_array = req.body.delete_array;
+  let add_array = req.body.add_array;
   
   if(isuSrtCd == undefined || array_to_json == undefined) {
     res.status(400).json({error: 'Input Error'});
   } else {
+    array_to_json = JSON.parse(array_to_json);
+    delete_array = JSON.parse(delete_array);
+    add_array = JSON.parse(add_array);
+
     // Insert or Update
     let query = "INSERT INTO stocksector VALUES(?, JSON_ARRAY(?)) ON DUPLICATE KEY UPDATE category=JSON_ARRAY(?)";
     let result = await db_connection.connection_query(query, [isuSrtCd, array_to_json, array_to_json]);
